@@ -266,11 +266,12 @@ async def save_booking(message: Message):
         cursor.execute(
             """
             INSERT INTO appointments
-            VALUES (%s, %s, %s, %s)
+            (client_id, service)
+            VALUES (%s, %s)
             """,
             (
                 client_id,
-                service,
+                service
             )
         )
 
@@ -290,18 +291,16 @@ async def save_booking(message: Message):
         conn.commit()
 
         await message.answer(
-            f"✅ Вы успешно записаны!\n\n"
-            f"💅 Услуга: {service}\n"
-            f"👩 Мастер: {master}\n"
+            f"✅ Заявка отправлена!\n\n"
+            f"📦 Товар: {service}"
         )
 
         # Уведомление админу
         await bot.send_message(
             ADMIN_ID,
-            f"📥 Новая запись!\n\n"
+            f"📥 Новая заявка!\n\n"
             f"👤 Клиент: {message.from_user.full_name}\n"
-            f"💅 Услуга: {service}\n"
-            f"👩 Мастер: {master}\n"
+            f"📦 Товар: {service}"
         )
 
     except Exception as e:
