@@ -739,6 +739,51 @@ async def text_handler(message: Message):
 
             await message.answer("✅ Мастер добавлен")
 
+@dp.message(F.text == "🛢 Масла")
+async def oils(message: Message):
+    await message.answer(
+        "🛢 Масла в наличии:\n\n"
+        "• Shell Rimula\n"
+        "• Mobil Delvac\n"
+        "• ZIC\n"
+        "• Sinotruk\n\n"
+        "Отправьте марку грузовика для подбора."
+    )
+
+
+@dp.message(F.text == "🔧 Фильтры")
+async def filters(message: Message):
+    await message.answer(
+        "🔧 Фильтры:\n\n"
+        "• Масляные\n"
+        "• Воздушные\n"
+        "• Топливные\n"
+        "• Салонные\n\n"
+        "Напишите модель грузовика."
+    )
+
+
+@dp.message(F.text == "⚙️ Запчасти")
+async def parts(message: Message):
+    await message.answer(
+        "⚙️ Запчасти для китайских грузовиков:\n\n"
+        "• HOWO\n"
+        "• SHACMAN\n"
+        "• FAW\n"
+        "• FOTON\n\n"
+        "Отправьте фото или VIN."
+    )
+
+
+@dp.message(F.text == "🔥 Акции")
+async def sales(message: Message):
+    await message.answer(
+        "🔥 Акции недели:\n\n"
+        "• Скидки на масла\n"
+        "• Фильтры оптом\n"
+        "• Бесплатный подбор запчастей"
+    )
+
 # ================= MAIN ================
 async def main():
 
