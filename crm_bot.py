@@ -66,9 +66,6 @@ CREATE TABLE IF NOT EXISTS appointments (
     id SERIAL PRIMARY KEY,
     client_id INTEGER,
     service TEXT,
-    master TEXT,
-    date TEXT,
-    time TEXT,
     status TEXT DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT NOW()
 )
@@ -259,10 +256,9 @@ async def save_booking(message: Message):
             SELECT id
             FROM appointments
             WHERE master = %s
-            AND date = %s
             """,
             (
-                date,
+                
             )
         )
 
@@ -270,14 +266,11 @@ async def save_booking(message: Message):
         cursor.execute(
             """
             INSERT INTO appointments
-            (client_id, service, master, date)
             VALUES (%s, %s, %s, %s)
             """,
             (
                 client_id,
                 service,
-                master,
-                date
             )
         )
 
@@ -300,7 +293,6 @@ async def save_booking(message: Message):
             f"✅ Вы успешно записаны!\n\n"
             f"💅 Услуга: {service}\n"
             f"👩 Мастер: {master}\n"
-            f"📅 Дата: {date}\n"
         )
 
         # Уведомление админу
@@ -310,7 +302,6 @@ async def save_booking(message: Message):
             f"👤 Клиент: {message.from_user.full_name}\n"
             f"💅 Услуга: {service}\n"
             f"👩 Мастер: {master}\n"
-            f"📅 Дата: {date}\n"
         )
 
     except Exception as e:
@@ -377,7 +368,6 @@ async def my_appointments(message: Message):
 
     cursor.execute(
         """
-        SELECT service, master, date, time, status
         FROM appointments
         WHERE client_id = %s
         ORDER BY id DESC
@@ -431,7 +421,6 @@ async def cancel_booking(message: Message):
         # Ищем последнюю запись
         cursor.execute(
             """
-            SELECT id, service, master, date, time
             FROM appointments
             WHERE client_id = %s
             ORDER BY id DESC
@@ -449,7 +438,6 @@ async def cancel_booking(message: Message):
         appointment_id = appointment[0]
         service = appointment[1]
         master = appointment[2]
-        date = appointment[3]
         
         # Удаляем запись
         cursor.execute(
@@ -482,7 +470,6 @@ async def cancel_booking(message: Message):
             f"✅ Заявка отменена.\n\n"
             f"💅 Услуга: {service}\n"
             f"👩 Мастер: {master}\n"
-            f"📅 Дата: {date}\n"
         )
 
         # Сообщение админу
@@ -492,7 +479,6 @@ async def cancel_booking(message: Message):
             f"👤 Клиент: {message.from_user.full_name}\n"
             f"💅 Услуга: {service}\n"
             f"👩 Мастер: {master}\n"
-            f"📅 Дата: {date}\n"
         )
 
     except Exception as e:
@@ -548,7 +534,6 @@ async def contacts(message: Message):
 async def all_appointments(message: Message):
 
     cursor.execute("""
-        SELECT service, master, date, time
         FROM appointments
         ORDER BY id DESC
     """)
@@ -565,12 +550,10 @@ async def all_appointments(message: Message):
 
         service = app[0]
         master = app[1]
-        date = app[2]
-
+        
         text += (
             f"🔧 Товар: {service}\n"
             f"👩 Мастер: {master}\n"
-            f"📅 Дата: {date}\n"
         )
 
     await message.answer(text)
