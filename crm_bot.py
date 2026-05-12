@@ -498,7 +498,7 @@ async def cancel_booking(message: Message):
 
         # Сообщение клиенту
         await message.answer(
-            f"✅ Запись отменена.\n\n"
+            f"✅ Заявка отменена.\n\n"
             f"💅 Услуга: {service}\n"
             f"👩 Мастер: {master}\n"
             f"📅 Дата: {date}\n"
@@ -565,7 +565,7 @@ async def contacts(message: Message):
     await message.answer(text)
 
 # ================= ADMIN FUNCTIONS =================
-@dp.message(F.text == "📋 Все записи")
+@dp.message(F.text == "📦 Все заявки")
 async def all_appointments(message: Message):
 
     cursor.execute("""
@@ -577,10 +577,10 @@ async def all_appointments(message: Message):
     appointments = cursor.fetchall()
 
     if not appointments:
-        await message.answer("Записей пока нет.")
+        await message.answer("Заявки пока нет.")
         return
 
-    text = "📋 Все записи:\n\n"
+    text = "📦 Все заявки:\n\n"
 
     for app in appointments:
 
@@ -590,7 +590,7 @@ async def all_appointments(message: Message):
         time = app[3]
 
         text += (
-            f"💅 Услуга: {service}\n"
+            f"🔧 Товар: {service}\n"
             f"👩 Мастер: {master}\n"
             f"📅 Дата: {date}\n"
             f"🕒 Время: {time}\n\n"
@@ -646,7 +646,7 @@ async def stats(message: Message):
     text = (
         "📊 Статистика\n\n"
         f"👥 Клиентов: {clients_count}\n"
-        f"📅 Записей: {appointments_count}\n"
+        f"📅 📦 Заявки: {appointments_count}\n"
         f"💰 Общая выручка: {total_money}₸"
     )
 
@@ -720,7 +720,7 @@ async def text_handler(message: Message):
                 (title, price, duration)
             )
 
-            await message.answer("✅ Услуга добавлена")
+            await message.answer("✅ 🔧 Товар добавлена")
 
         # MASTER
         elif len(parts) == 2:
@@ -736,7 +736,7 @@ async def text_handler(message: Message):
                 (name, specialty)
             )
 
-            await message.answer("✅ Мастер добавлен")
+            await message.answer("✅ 🏷 Категория добавлен")
 
 @dp.message(F.text == "🛢 Масла")
 async def oils(message: Message):
