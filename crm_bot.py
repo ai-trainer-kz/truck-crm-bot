@@ -262,38 +262,24 @@ async def save_booking(message: Message):
             FROM appointments
             WHERE master = %s
             AND date = %s
-            AND time = %s
             """,
             (
-                master,
                 date,
-                time
             )
         )
-        
-        busy_slot = cursor.fetchone()
-        
-        if busy_slot:
-        
-            await message.answer(
-                "❌ Это время уже занято.\nВыберите другое время."
-            )
-        
-            return
 
         # Сохраняем запись
         cursor.execute(
             """
             INSERT INTO appointments
-            (client_id, service, master, date, time)
-            VALUES (%s, %s, %s, %s, %s)
+            (client_id, service, master, date)
+            VALUES (%s, %s, %s, %s)
             """,
             (
                 client_id,
                 service,
                 master,
-                date,
-                time
+                date
             )
         )
 
