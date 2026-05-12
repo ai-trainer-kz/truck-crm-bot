@@ -16,7 +16,7 @@ import psycopg2
 TOKEN = os.getenv("TOKEN")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-ADMIN_ID = 8398266271
+ADMIN_ID = 8398266271 
 
 # ================= BOT =================
 
