@@ -213,10 +213,10 @@ async def save_booking(message: Message):
         if len(lines) != 4:
             return
 
-        service = lines[0]
-        master = lines[1]
-        date = lines[2]
-        time = lines[3]
+        product = lines[0]
+        truck = lines[1]
+        vin = lines[2]
+        phone = lines[3]
 
         time = time.replace(".", ":")
 
@@ -414,12 +414,10 @@ async def my_appointments(message: Message):
 
     for item in appointments:
         text += (
-            f"💅 Услуга: {item[0]}\n"
-            f"👩‍🔬 Мастер: {item[1]}\n"
-            f"📅 Дата: {item[2]}\n"
-            f"⏰ Время: {item[3]}\n"
-            f"📌 Статус: {item[4]}\n\n"
-        )
+            f"📦 Товар: {product}\n"
+            f"🚚 Грузовик: {truck}\n"
+            f"🆔 VIN: {vin}\n"
+            f"📞 Телефон: {phone}"
 
     await message.answer(text)
 
