@@ -317,7 +317,6 @@ async def save_booking(message: Message):
             f"💅 Услуга: {service}\n"
             f"👩 Мастер: {master}\n"
             f"📅 Дата: {date}\n"
-            f"🕒 Время: {time}"
         )
 
         # Уведомление админу
@@ -328,7 +327,6 @@ async def save_booking(message: Message):
             f"💅 Услуга: {service}\n"
             f"👩 Мастер: {master}\n"
             f"📅 Дата: {date}\n"
-            f"🕒 Время: {time}"
         )
 
     except Exception as e:
@@ -502,7 +500,6 @@ async def cancel_booking(message: Message):
             f"💅 Услуга: {service}\n"
             f"👩 Мастер: {master}\n"
             f"📅 Дата: {date}\n"
-            f"🕒 Время: {time}"
         )
 
         # Сообщение админу
@@ -513,7 +510,6 @@ async def cancel_booking(message: Message):
             f"💅 Услуга: {service}\n"
             f"👩 Мастер: {master}\n"
             f"📅 Дата: {date}\n"
-            f"🕒 Время: {time}"
         )
 
     except Exception as e:
