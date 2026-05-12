@@ -103,15 +103,14 @@ client_kb = ReplyKeyboardMarkup(
 admin_kb = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text="📋 Все записи")
+            KeyboardButton(text="📦 Заявки"),
         ],
         [
             KeyboardButton(text="👥 Клиенты"),
-            KeyboardButton(text="📊 Статистика")
+            KeyboardButton(text="📊 Статистика"),
         ],
         [
-            KeyboardButton(text="➕ Добавить услугу"),
-            KeyboardButton(text="➕ Добавить мастера")
+            KeyboardButton(text="➕ Добавить товар"),
         ],
         [
             KeyboardButton(text="📢 Рассылка")
