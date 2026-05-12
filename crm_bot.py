@@ -418,7 +418,7 @@ async def my_appointments(message: Message):
             f"🚚 Грузовик: {truck}\n"
             f"🆔 VIN: {vin}\n"
             f"📞 Телефон: {phone}"
-
+    )
     await message.answer(text)
 
 @dp.message(F.text == "❌ Отменить запись")
