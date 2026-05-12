@@ -65,11 +65,13 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS appointments (
     id SERIAL PRIMARY KEY,
     client_id INTEGER,
-    service TEXT,
+    product TEXT,
+    truck TEXT,
+    vin TEXT,
+    phone TEXT,
     status TEXT DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT NOW()
 )
-""")
 
 # ================= KEYBOARDS =================
 
@@ -250,28 +252,19 @@ async def save_booking(message: Message):
             client_id = client[0]
             current_visits = client[1]
 
-        # Проверка занятого времени
-        cursor.execute(
-            """
-            SELECT id
-            FROM appointments
-            WHERE master = %s
-            """,
-            (
-                
-            )
-        )
-
-        # Сохраняем запись
+        # Сохраняем заявку
         cursor.execute(
             """
             INSERT INTO appointments
-            (client_id, service)
-            VALUES (%s, %s)
+            (client_id, product, truck, vin, phone)
+            VALUES (%s, %s, %s, %s, %s)
             """,
             (
                 client_id,
-                service
+                product,
+                truck,
+                vin,
+                phone
             )
         )
 
@@ -367,11 +360,11 @@ async def my_appointments(message: Message):
 
     cursor.execute(
         """
+        SELECT product, truck, vin, phone
         FROM appointments
         WHERE client_id = %s
         ORDER BY id DESC
         """,
-        (client_id,)
     )
 
     appointments = cursor.fetchall()
@@ -383,12 +376,18 @@ async def my_appointments(message: Message):
     text = "🕒 Ваши записи:\n\n"
 
     for item in appointments:
+
+        product = item[0]
+        truck = item[1]
+        vin = item[2]
+        phone = item[3]
+    
         text += (
             f"📦 Товар: {product}\n"
             f"🚚 Грузовик: {truck}\n"
             f"🆔 VIN: {vin}\n"
-            f"📞 Телефон: {phone}"
-    )
+            f"📞 Телефон: {phone}\n\n"
+        )
     await message.answer(text)
 
 @dp.message(F.text == "❌ Отменить запись")
@@ -533,6 +532,7 @@ async def contacts(message: Message):
 async def all_appointments(message: Message):
 
     cursor.execute("""
+        SELECT product, truck, vin, phone
         FROM appointments
         ORDER BY id DESC
     """)
@@ -540,19 +540,23 @@ async def all_appointments(message: Message):
     appointments = cursor.fetchall()
 
     if not appointments:
-        await message.answer("Заявки пока нет.")
+        await message.answer("Заявок пока нет.")
         return
 
     text = "📦 Все заявки:\n\n"
 
     for app in appointments:
 
-        service = app[0]
-        master = app[1]
-        
+        product = app[0]
+        truck = app[1]
+        vin = app[2]
+        phone = app[3]
+
         text += (
-            f"🔧 Товар: {service}\n"
-            f"👩 Мастер: {master}\n"
+            f"📦 Товар: {product}\n"
+            f"🚚 Грузовик: {truck}\n"
+            f"🆔 VIN: {vin}\n"
+            f"📞 Телефон: {phone}\n\n"
         )
 
     await message.answer(text)
