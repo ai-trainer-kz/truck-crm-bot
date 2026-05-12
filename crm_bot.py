@@ -216,9 +216,7 @@ async def save_booking(message: Message):
         truck = lines[1]
         vin = lines[2]
         phone = lines[3]
-
-        time = time.replace(".", ":")
-
+        
         # Получаем клиента
         cursor.execute(
             """
@@ -452,8 +450,7 @@ async def cancel_booking(message: Message):
         service = appointment[1]
         master = appointment[2]
         date = appointment[3]
-        time = appointment[4]
-
+        
         # Удаляем запись
         cursor.execute(
             """
@@ -569,13 +566,11 @@ async def all_appointments(message: Message):
         service = app[0]
         master = app[1]
         date = app[2]
-        time = app[3]
 
         text += (
             f"🔧 Товар: {service}\n"
             f"👩 Мастер: {master}\n"
             f"📅 Дата: {date}\n"
-            f"🕒 Время: {time}\n\n"
         )
 
     await message.answer(text)
