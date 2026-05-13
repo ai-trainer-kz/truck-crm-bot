@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS appointments (
     status TEXT DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT NOW()
 )
+""")
 
 # ================= KEYBOARDS =================
 
@@ -285,7 +286,7 @@ async def save_booking(message: Message):
 
         await message.answer(
             f"✅ Заявка отправлена!\n\n"
-            f"📦 Товар: {service}"
+            f"📦 Товар: {product}"
         )
 
         # Уведомление админу
@@ -293,7 +294,7 @@ async def save_booking(message: Message):
             ADMIN_ID,
             f"📥 Новая заявка!\n\n"
             f"👤 Клиент: {message.from_user.full_name}\n"
-            f"📦 Товар: {service}"
+            f"📦 Товар: {product}"
         )
 
     except Exception as e:
@@ -365,6 +366,7 @@ async def my_appointments(message: Message):
         WHERE client_id = %s
         ORDER BY id DESC
         """,
+        (client_id,)
     )
 
     appointments = cursor.fetchall()
@@ -397,7 +399,6 @@ async def cancel_booking(message: Message):
 
         user_id = message.from_user.id
 
-        # Ищем клиента
         cursor.execute(
             """
             SELECT id, visits
@@ -410,15 +411,15 @@ async def cancel_booking(message: Message):
         client = cursor.fetchone()
 
         if not client:
-            await message.answer("❌ У вас нет записей.")
+            await message.answer("❌ У вас нет заявок.")
             return
 
         client_id = client[0]
         current_visits = client[1]
 
-        # Ищем последнюю запись
         cursor.execute(
             """
+            SELECT id, product
             FROM appointments
             WHERE client_id = %s
             ORDER BY id DESC
@@ -430,14 +431,12 @@ async def cancel_booking(message: Message):
         appointment = cursor.fetchone()
 
         if not appointment:
-            await message.answer("❌ Записей не найдено.")
+            await message.answer("❌ Заявок не найдено.")
             return
 
         appointment_id = appointment[0]
-        service = appointment[1]
-        master = appointment[2]
-        
-        # Удаляем запись
+        product = appointment[1]
+
         cursor.execute(
             """
             DELETE FROM appointments
@@ -446,7 +445,6 @@ async def cancel_booking(message: Message):
             (appointment_id,)
         )
 
-        # Уменьшаем visits
         if current_visits > 0:
 
             cursor.execute(
@@ -463,22 +461,18 @@ async def cancel_booking(message: Message):
 
         conn.commit()
 
-        # Сообщение клиенту
         await message.answer(
             f"✅ Заявка отменена.\n\n"
-            f"💅 Услуга: {service}\n"
-            f"👩 Мастер: {master}\n"
+            f"📦 Товар: {product}"
         )
 
-        # Сообщение админу
-        await bot.send_message(
-            ADMIN_ID,
-            f"❌ Клиент отменил запись!\n\n"
-            f"👤 Клиент: {message.from_user.full_name}\n"
-            f"💅 Услуга: {service}\n"
-            f"👩 Мастер: {master}\n"
-        )
+    except Exception as e:
 
+        print("CANCEL ERROR:", e)
+
+        await message.answer(
+            f"❌ Ошибка:\n{e}"
+        )
     except Exception as e:
 
         print("CANCEL ERROR:", e)
