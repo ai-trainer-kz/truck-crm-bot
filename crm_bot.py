@@ -30,8 +30,6 @@ conn.autocommit = True
 
 cursor = conn.cursor()
 
-cursor.execute("DROP TABLE IF EXISTS appointments")
-
 # ================= TABLES =================
 
 cursor.execute("""
