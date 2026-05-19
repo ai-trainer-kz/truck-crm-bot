@@ -31,6 +31,19 @@ conn.autocommit = True
 
 cursor = conn.cursor()
 
+# ================= PRODUCTS TABLE =================
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT,
+    price INTEGER,
+    quantity INTEGER
+)
+""")
+
+conn.commit()
+
 # ================= TABLES =================
 
 cursor.execute("""
