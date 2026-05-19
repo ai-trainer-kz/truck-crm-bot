@@ -45,11 +45,12 @@ CREATE TABLE IF NOT EXISTS clients (
 """)
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS services (
+CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
     title TEXT,
+    category TEXT,
     price INTEGER,
-    duration INTEGER
+    description TEXT
 )
 """)
 
@@ -618,7 +619,7 @@ async def add_service(message: Message):
     text = (
         "Чтобы добавить услугу,\n"
         "отправьте так:\n\n"
-        "Маникюр,15000,90"
+        "Название,Категория,Цена"
     )
 
     await message.answer(text)
@@ -666,18 +667,21 @@ async def text_handler(message: Message):
         if len(parts) == 3:
 
             title = parts[0]
-            price = int(parts[1])
-            duration = int(parts[2])
-
+            category = parts[1]
+            price = int(parts[2])
+        
             cursor.execute(
                 """
-                INSERT INTO services (title, price, duration)
+                INSERT INTO products
+                (title, category, price)
                 VALUES (%s, %s, %s)
                 """,
-                (title, price, duration)
+                (title, category, price)
             )
-
-            await message.answer("✅ 🔧 Товар добавлена")
+        
+            await message.answer(
+                "✅ Товар добавлен"
+            )
 
         # MASTER
         elif len(parts) == 2:
@@ -695,6 +699,33 @@ async def text_handler(message: Message):
 
             await message.answer("✅ 🏷 Категория добавлен")
 
+@dp.message(F.text == "🚚 Каталог")
+async def catalog(message: Message):
+
+    cursor.execute("""
+        SELECT title, category, price
+        FROM products
+        ORDER BY id DESC
+    """)
+
+    products = cursor.fetchall()
+
+    if not products:
+        await message.answer("🚚 Каталог пока пуст.")
+        return
+
+    text = "🚚 Каталог:\n\n"
+
+    for product in products:
+
+        text += (
+            f"📦 {product[0]}\n"
+            f"🏷 {product[1]}\n"
+            f"💰 {product[2]}₸\n\n"
+        )
+
+    await message.answer(text)
+
 @dp.message(F.text == "🛢 Масла")
 async def oils(message: Message):
     await message.answer(
@@ -705,7 +736,6 @@ async def oils(message: Message):
         "• Sinotruk\n\n"
         "Отправьте марку грузовика для подбора."
     )
-
 
 @dp.message(F.text == "🔧 Фильтры")
 async def filters(message: Message):
