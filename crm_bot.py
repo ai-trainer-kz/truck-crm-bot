@@ -104,13 +104,15 @@ admin_kb = ReplyKeyboardMarkup(
     keyboard=[
         [
             KeyboardButton(text="📦 Заявки"),
+            KeyboardButton(text="🏬 Остатки")
         ],
         [
             KeyboardButton(text="👥 Клиенты"),
-            KeyboardButton(text="📊 Статистика"),
+            KeyboardButton(text="📊 Статистика")
         ],
         [
             KeyboardButton(text="➕ Добавить товар"),
+            KeyboardButton(text="❌ Удалить товар")
         ],
         [
             KeyboardButton(text="📢 Рассылка")
@@ -707,6 +709,7 @@ async def catalog(message: Message):
         cursor.execute("""
             SELECT title, price, quantity
             FROM products
+            WHERE quantity > 0
             ORDER BY id DESC
         """)
 
