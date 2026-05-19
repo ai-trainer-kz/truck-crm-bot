@@ -35,10 +35,12 @@ cursor = conn.cursor()
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS products (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    id SERIAL PRIMARY KEY,
     title TEXT,
     price INTEGER,
     quantity INTEGER
+
 )
 """)
 
