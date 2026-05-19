@@ -524,7 +524,7 @@ async def contacts(message: Message):
     await message.answer(text)
 
 # ================= ADMIN FUNCTIONS =================
-@dp.message(F.text == "📦 Все заявки")
+@dp.message(F.text == "📦 Заявки")
 async def all_appointments(message: Message):
 
     cursor.execute("""
@@ -674,11 +674,15 @@ async def text_handler(message: Message):
 
 # ================= УДАЛИТЬ ТОВАР =================
 
+delete_mode = {}
+
 @dp.message(F.text == "❌ Удалить товар")
 async def delete_product(message: Message):
 
     if message.from_user.id != ADMIN_ID:
         return
+
+    delete_mode[message.from_user.id] = True
 
     await message.answer(
         "Отправьте ID товара для удаления."
@@ -690,23 +694,30 @@ async def delete_by_id(message: Message):
     if message.from_user.id != ADMIN_ID:
         return
 
-    if message.text.isdigit():
+    if not delete_mode.get(message.from_user.id):
+        return
 
-        product_id = int(message.text)
+    if not message.text.isdigit():
+        await message.answer("Отправьте только ID цифрами.")
+        return
 
-        cursor.execute(
-            """
-            DELETE FROM products
-            WHERE id = %s
-            """,
-            (product_id,)
-        )
+    product_id = int(message.text)
 
-        conn.commit()
+    cursor.execute(
+        """
+        DELETE FROM products
+        WHERE id = %s
+        """,
+        (product_id,)
+    )
 
-        await message.answer(
-            "✅ Товар удалён."
-        )
+    conn.commit()
+
+    delete_mode[message.from_user.id] = False
+
+    await message.answer(
+        "✅ Товар удалён."
+    )
 
 @dp.message(F.text == "🚚 Каталог")
 async def catalog(message: Message):
