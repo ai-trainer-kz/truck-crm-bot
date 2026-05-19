@@ -672,22 +672,6 @@ async def text_handler(message: Message):
         await message.answer(
             "✅ Товар добавлен."
         )
-        # MASTER
-        elif len(parts) == 3:
-
-            title = parts[0]
-            price = int(parts[1])
-            quantity = int(parts[2])
-        
-            cursor.execute(
-                """
-                INSERT INTO products (title, price, quantity)
-                VALUES (%s, %s, %s)
-                """,
-                (title, price, quantity)
-            )
-        
-            await message.answer("✅ Товар добавлен")
 
 # ================= УДАЛИТЬ ТОВАР =================
 
