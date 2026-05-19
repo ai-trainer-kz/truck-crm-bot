@@ -529,21 +529,26 @@ async def stats(message: Message):
 
 # ================= ДОБАВИТЬ ТОВАР =================
 
-@dp.message(F.text == "➕ Добавить товар")
-async def add_product(message: Message):
+await message.answer(
+    "📦 Добавление товара\n\n"
 
-    if message.from_user.id != ADMIN_ID:
-        return
+    "Напишите товар так:\n\n"
 
-    await message.answer(
-        "Отправьте товар так:\n\n"
-        "Название,Цена,Категория,Количество\n\n"
-        "Пример:\n"
-        "Shell Rimula,32000,Масла,5"
-    )
+    "масло название цена количество\n"
+    "фильтр название цена количество\n"
+    "запчасть название цена количество\n"
+    "акция название цена количество\n\n"
 
+    "Примеры:\n\n"
 
-@dp.message(F.text.contains(","))
+    "масло Shell Rimula 15W40 32000 5\n\n"
+
+    "фильтр HOWO WG9725550966 12000 10\n\n"
+
+    "запчасть Подшипник SHACMAN 45000 2"
+)
+
+dp.message()
 async def save_product(message: Message):
 
     if message.from_user.id != ADMIN_ID:
@@ -551,15 +556,36 @@ async def save_product(message: Message):
 
     text = message.text.strip()
 
-    parts = [x.strip() for x in text.split(",")]
+    words = text.split()
 
-    if len(parts) != 4:
+    if len(words) < 4:
         return
 
-    title = parts[0]
-    price = int(parts[1])
-    category = parts[2]
-    quantity = int(parts[3])
+    product_type = words[0].lower()
+
+    quantity = words[-1]
+
+    price = words[-2]
+
+    title = " ".join(words[1:-2])
+
+    if not price.isdigit():
+        return
+
+    if not quantity.isdigit():
+        return
+
+    categories = {
+        "масло": "Масла",
+        "фильтр": "Фильтры",
+        "запчасть": "Запчасти",
+        "акция": "Акции"
+    }
+
+    if product_type not in categories:
+        return
+
+    category = categories[product_type]
 
     cursor.execute(
         """
@@ -567,15 +593,23 @@ async def save_product(message: Message):
         (title, price, category, quantity)
         VALUES (%s, %s, %s, %s)
         """,
-        (title, price, category, quantity)
+        (
+            title,
+            int(price),
+            category,
+            int(quantity)
+        )
     )
 
     conn.commit()
 
     await message.answer(
-        "✅ Товар добавлен."
+        f"✅ Товар добавлен:\n\n"
+        f"📦 {title}\n"
+        f"💰 {price}₸\n"
+        f"📂 {category}\n"
+        f"📦 Остаток: {quantity}"
     )
-
 # ================= УДАЛИТЬ ТОВАР =================
 
 delete_mode = {}
