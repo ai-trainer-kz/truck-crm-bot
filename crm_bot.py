@@ -702,29 +702,37 @@ async def text_handler(message: Message):
 @dp.message(F.text == "🚚 Каталог")
 async def catalog(message: Message):
 
-    cursor.execute("""
-        SELECT title, price, quantity
-        FROM products
-        ORDER BY id DESC
-    """)
+    try:
 
-    products = cursor.fetchall()
+        cursor.execute("""
+            SELECT title, price, quantity
+            FROM products
+            ORDER BY id DESC
+        """)
 
-    if not products:
-        await message.answer("🚚 Каталог пока пуст.")
-        return
+        products = cursor.fetchall()
 
-    text = "🚚 Каталог:\n\n"
+        if not products:
+            await message.answer("🚚 Каталог пуст.")
+            return
 
-    for product in products:
+        text = "🚚 Каталог:\n\n"
 
-        text += (
-            f"📦 {product[0]}\n"
-            f"💰 {product[1]}₸\n"
-            f"📦 Остаток: {product[2]}\n\n"
-        )
+        for product in products:
 
-    await message.answer(text)
+            text += (
+                f"📦 {product[0]}\n"
+                f"💰 {product[1]}₸\n"
+                f"📦 Остаток: {product[2]}\n\n"
+            )
+
+        await message.answer(text)
+
+    except Exception as e:
+
+        print("CATALOG ERROR:", e)
+
+        await message.answer(f"❌ Ошибка каталога:\n{e}")
     
 @dp.message(F.text == "🛢 Масла")
 async def oils(message: Message):
