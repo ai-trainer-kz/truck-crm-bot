@@ -660,47 +660,129 @@ async def catalog(message: Message):
     
 @dp.message(F.text == "🛢 Масла")
 async def oils(message: Message):
-    await message.answer(
-        "🛢 Масла в наличии:\n\n"
-        "• Shell Rimula\n"
-        "• Mobil Delvac\n"
-        "• ZIC\n"
-        "• Sinotruk\n\n"
-        "Отправьте марку грузовика для подбора."
+
+    cursor.execute(
+        """
+        SELECT title, price
+        FROM products
+        WHERE category = %s
+        AND quantity > 0
+        ORDER BY id DESC
+        """,
+        ("Масла",)
     )
+
+    products = cursor.fetchall()
+
+    if not products:
+        await message.answer("🛢 Масла пока отсутствуют.")
+        return
+
+    text = "🛢 Масла в наличии:\n\n"
+
+    for product in products:
+
+        text += (
+            f"📦 {product[0]}\n"
+            f"💰 {product[1]}₸\n\n"
+        )
+
+    await message.answer(text)
 
 @dp.message(F.text == "🔧 Фильтры")
 async def filters(message: Message):
-    await message.answer(
-        "🔧 Фильтры:\n\n"
-        "• Масляные\n"
-        "• Воздушные\n"
-        "• Топливные\n"
-        "• Салонные\n\n"
-        "Напишите модель грузовика."
+
+    cursor.execute(
+        """
+        SELECT title, price
+        FROM products
+        WHERE category = %s
+        AND quantity > 0
+        ORDER BY id DESC
+        """,
+        ("Фильтры",)
     )
+
+    products = cursor.fetchall()
+
+    if not products:
+        await message.answer("🔧 Фильтры пока отсутствуют.")
+        return
+
+    text = "🔧 Фильтры:\n\n"
+
+    for product in products:
+
+        text += (
+            f"📦 {product[0]}\n"
+            f"💰 {product[1]}₸\n\n"
+        )
+
+    await message.answer(text)
 
 
 @dp.message(F.text == "⚙️ Запчасти")
 async def parts(message: Message):
-    await message.answer(
-        "⚙️ Запчасти для китайских грузовиков:\n\n"
-        "• HOWO\n"
-        "• SHACMAN\n"
-        "• FAW\n"
-        "• FOTON\n\n"
-        "Отправьте фото или VIN."
+
+    cursor.execute(
+        """
+        SELECT title, price
+        FROM products
+        WHERE category = %s
+        AND quantity > 0
+        ORDER BY id DESC
+        """,
+        ("Запчасти",)
     )
+
+    products = cursor.fetchall()
+
+    if not products:
+        await message.answer("⚙️ Запчасти пока отсутствуют.")
+        return
+
+    text = "⚙️ Запчасти:\n\n"
+
+    for product in products:
+
+        text += (
+            f"📦 {product[0]}\n"
+            f"💰 {product[1]}₸\n\n"
+        )
+
+    await message.answer(text)
 
 
 @dp.message(F.text == "🔥 Акции")
 async def sales(message: Message):
-    await message.answer(
-        "🔥 Акции недели:\n\n"
-        "• Скидки на масла\n"
-        "• Фильтры оптом\n"
-        "• Бесплатный подбор запчастей"
+
+    cursor.execute(
+        """
+        SELECT title, price
+        FROM products
+        WHERE category = %s
+        AND quantity > 0
+        ORDER BY id DESC
+        """,
+        ("Акции",)
     )
+
+    products = cursor.fetchall()
+
+    if not products:
+        await message.answer("🔥 Акций пока нет.")
+        return
+
+    text = "🔥 Акции:\n\n"
+
+    for product in products:
+
+        text += (
+            f"📦 {product[0]}\n"
+            f"💰 {product[1]}₸\n\n"
+        )
+
+    await message.answer(text)
 
 # ================= MAIN ================
 async def main():
