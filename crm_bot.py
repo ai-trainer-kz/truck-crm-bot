@@ -44,6 +44,8 @@ CREATE TABLE IF NOT EXISTS clients (
 )
 """)
 
+cursor.execute("DROP TABLE IF EXISTS products")
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
