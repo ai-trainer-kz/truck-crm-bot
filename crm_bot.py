@@ -556,6 +556,34 @@ async def all_appointments(message: Message):
         )
 
     await message.answer(text)
+
+@dp.message(F.text == "🏬 Остатки")
+async def stock(message: Message):
+
+    cursor.execute("""
+        SELECT id, title, price, quantity
+        FROM products
+        ORDER BY id DESC
+    """)
+
+    products = cursor.fetchall()
+
+    if not products:
+        await message.answer("Склад пуст.")
+        return
+
+    text = "🏬 Остатки:\n\n"
+
+    for product in products:
+
+        text += (
+            f"ID: {product[0]}\n"
+            f"📦 {product[1]}\n"
+            f"💰 {product[2]}₸\n"
+            f"📦 Остаток: {product[3]}\n\n"
+        )
+
+    await message.answer(text)
     
 @dp.message(F.text == "👥 Клиенты")
 async def clients_list(message: Message):
