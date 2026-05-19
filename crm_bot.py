@@ -720,12 +720,12 @@ async def catalog(message: Message):
 
         text += (
             f"📦 {product[0]}\n"
-            f"🏷 {product[1]}\n"
-            f"💰 {product[2]}₸\n\n"
+            f"💰 {product[1]}₸\n"
+            f"📦 Остаток: {product[2]}\n\n"
         )
 
     await message.answer(text)
-
+    
 @dp.message(F.text == "🛢 Масла")
 async def oils(message: Message):
     await message.answer(
