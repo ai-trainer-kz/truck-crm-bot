@@ -158,8 +158,6 @@ async def admin_panel(message: Message):
     if message.from_user.id != ADMIN_ID:
         return
 
-    add_mode[message.from_user.id] = True 
-
     cursor.execute("SELECT COUNT(*) FROM clients")
     users_count = cursor.fetchone()[0]
 
@@ -558,7 +556,6 @@ async def add_product(message: Message):
 
 @dp.message(
     F.text &
-    ~F.text.startswith("/") &
     ~F.text.startswith("🚚") &
     ~F.text.startswith("🛢") &
     ~F.text.startswith("🔧") &
@@ -578,6 +575,9 @@ async def save_product(message: Message):
         return
 
     if not add_mode.get(message.from_user.id):
+        return
+
+    if message.from_user.id != ADMIN_ID:
         return
 
     if message.text.startswith("/"):
