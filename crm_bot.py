@@ -44,8 +44,6 @@ CREATE TABLE IF NOT EXISTS clients (
 )
 """)
 
-cursor.execute("DROP TABLE IF EXISTS products")
-
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
@@ -641,45 +639,7 @@ async def stats(message: Message):
 
     await message.answer(text)
 
-@dp.message(F.text == "➕ Добавить услугу")
-async def add_service(message: Message):
-
-    if message.from_user.id != ADMIN_ID:
-        return
-
-    text = (
-        "Чтобы добавить услугу,\n"
-        "отправьте так:\n\n"
-        "Название,Категория,Цена"
-    )
-
-    await message.answer(text)
-
-@dp.message(F.text == "➕ Добавить мастера")
-async def add_master(message: Message):
-
-    if message.from_user.id != ADMIN_ID:
-        return
-
-    text = (
-        "Чтобы добавить мастера,\n"
-        "отправьте так:\n\n"
-        "Алина,Маникюр"
-    )
-
-    await message.answer(text)
-
-@dp.message(F.text == "📢 Рассылка")
-async def mailing(message: Message):
-
-    if message.from_user.id != ADMIN_ID:
-        return
-
-    await message.answer(
-        "Отправьте текст для рассылки."
-    )
-
-# ================= AUTO ADD SERVICE =================
+# ================= ДОБАВИТЬ ТОВАР =================
 
 @dp.message(F.text.contains(","))
 async def text_handler(message: Message):
@@ -689,31 +649,29 @@ async def text_handler(message: Message):
 
     text = message.text
 
-    # Добавление услуги
-    if "," in text:
+    parts = text.split(",")
 
-        parts = text.split(",")
+    # Товар
+    if len(parts) == 3:
 
-        # SERVICE
-        if len(parts) == 3:
+        title = parts[0]
+        price = int(parts[1])
+        quantity = int(parts[2])
 
-            title = parts[0]
-            price = int(parts[1])
-            quantity = int(parts[2])
-        
-            cursor.execute(
-                """
-                INSERT INTO products
-                (title, price, quantity)
-                VALUES (%s, %s, %s)
-                """,
-                (title, price, quantity)
-            )
-        
-            await message.answer(
-                "✅ Товар добавлен"
-            )
+        cursor.execute(
+            """
+            INSERT INTO products
+            (title, price, quantity)
+            VALUES (%s, %s, %s)
+            """,
+            (title, price, quantity)
+        )
 
+        conn.commit()
+
+        await message.answer(
+            "✅ Товар добавлен."
+        )
         # MASTER
         elif len(parts) == 3:
 
@@ -730,6 +688,42 @@ async def text_handler(message: Message):
             )
         
             await message.answer("✅ Товар добавлен")
+
+# ================= УДАЛИТЬ ТОВАР =================
+
+@dp.message(F.text == "❌ Удалить товар")
+async def delete_product(message: Message):
+
+    if message.from_user.id != ADMIN_ID:
+        return
+
+    await message.answer(
+        "Отправьте ID товара для удаления."
+    )
+
+@dp.message()
+async def delete_by_id(message: Message):
+
+    if message.from_user.id != ADMIN_ID:
+        return
+
+    if message.text.isdigit():
+
+        product_id = int(message.text)
+
+        cursor.execute(
+            """
+            DELETE FROM products
+            WHERE id = %s
+            """,
+            (product_id,)
+        )
+
+        conn.commit()
+
+        await message.answer(
+            "✅ Товар удалён."
+        )
 
 @dp.message(F.text == "🚚 Каталог")
 async def catalog(message: Message):
