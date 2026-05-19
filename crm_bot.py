@@ -48,9 +48,8 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
     title TEXT,
-    category TEXT,
     price INTEGER,
-    description TEXT
+    quantity INTEGER
 )
 """)
 
@@ -667,8 +666,8 @@ async def text_handler(message: Message):
         if len(parts) == 3:
 
             title = parts[0]
-            category = parts[1]
-            price = int(parts[2])
+            price = int(parts[1])
+            quantity = int(parts[2]))
         
             cursor.execute(
                 """
@@ -684,26 +683,27 @@ async def text_handler(message: Message):
             )
 
         # MASTER
-        elif len(parts) == 2:
+        elif len(parts) == 3:
 
-            name = parts[0]
-            specialty = parts[1]
-
+            title = parts[0]
+            price = int(parts[1])
+            quantity = int(parts[2])
+        
             cursor.execute(
                 """
-                INSERT INTO masters (name, specialty)
-                VALUES (%s, %s)
+                INSERT INTO products (title, price, quantity)
+                VALUES (%s, %s, %s)
                 """,
-                (name, specialty)
+                (title, price, quantity)
             )
-
-            await message.answer("✅ 🏷 Категория добавлен")
+        
+            await message.answer("✅ Товар добавлен")
 
 @dp.message(F.text == "🚚 Каталог")
 async def catalog(message: Message):
 
     cursor.execute("""
-        SELECT title, category, price
+        SELECT title, price, quantity
         FROM products
         ORDER BY id DESC
     """)
