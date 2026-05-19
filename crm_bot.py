@@ -556,91 +556,52 @@ async def add_product(message: Message):
 
 @dp.message(
     F.text &
-    ~F.text.startswith("🚚") &
-    ~F.text.startswith("🛢") &
-    ~F.text.startswith("🔧") &
-    ~F.text.startswith("⚙️") &
-    ~F.text.startswith("🔥") &
-    ~F.text.startswith("📦") &
-    ~F.text.startswith("📍") &
-    ~F.text.startswith("📞") &
-    ~F.text.startswith("👥") &
-    ~F.text.startswith("📊") &
-    ~F.text.startswith("🏬") &
-    ~F.text.startswith("❌")
+    ~F.text.startswith("/")
 )
 async def save_product(message: Message):
 
     if message.from_user.id != ADMIN_ID:
         return
 
-    if not add_mode.get(message.from_user.id):
-        return
+    try:
+        text = message.text.strip()
 
-    if message.from_user.id != ADMIN_ID:
-        return
+        parts = text.split()
 
-    if message.text.startswith("/"):
-        return
+        if len(parts) < 4:
+            return
 
-    text = message.text.strip()
+        category = parts[0]
+        quantity = int(parts[-1])
+        price = int(parts[-2])
+        name = " ".join(parts[1:-2])
 
-    words = text.split()
+        conn = sqlite3.connect("crm.db")
+        cursor = conn.cursor()
 
-    if len(words) < 4:
-        return
-
-    product_type = words[0].lower()
-
-    quantity = words[-1]
-
-    price = words[-2]
-
-    title = " ".join(words[1:-2])
-
-    if not price.isdigit():
-        return
-
-    if not quantity.isdigit():
-        return
-
-    categories = {
-        "масло": "Масла",
-        "фильтр": "Фильтры",
-        "запчасть": "Запчасти",
-        "акция": "Акции"
-    }
-
-    if product_type not in categories:
-        return
-
-    category = categories[product_type]
-
-    cursor.execute(
-        """
-        INSERT INTO products
-        (title, price, category, quantity)
-        VALUES (%s, %s, %s, %s)
-        """,
-        (
-            title,
-            int(price),
-            category,
-            int(quantity)
+        cursor.execute(
+            """
+            INSERT INTO products
+            (name, price, category, quantity)
+            VALUES (?, ?, ?, ?)
+            """,
+            (name, price, category, quantity)
         )
-    )
 
-    conn.commit()
+        conn.commit()
+        conn.close()
 
-    add_mode[message.from_user.id] = False
+        await message.answer(
+            f"✅ Товар добавлен:\n\n"
+            f"📦 {name}\n"
+            f"💰 {price}₸\n"
+            f"📂 {category}\n"
+            f"📦 Остаток: {quantity}"
+        )
 
-    await message.answer(
-        f"✅ Товар добавлен:\n\n"
-        f"📦 {title}\n"
-        f"💰 {price}₸\n"
-        f"📂 {category}\n"
-        f"📦 Остаток: {quantity}"
-    )
+    except Exception as e:
+        await message.answer(f"❌ Ошибка:\n{e}")
+        
 # ================= УДАЛИТЬ ТОВАР =================
 
 delete_mode = {}
