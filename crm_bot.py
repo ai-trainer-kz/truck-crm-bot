@@ -602,7 +602,13 @@ async def delete_by_id(message: Message):
         return
 
     if not message.text.isdigit():
-        await message.answer("Отправьте только ID цифрами.")
+
+        delete_mode[message.from_user.id] = False
+    
+        await message.answer(
+            "❌ Режим удаления отменён."
+        )
+    
         return
 
     product_id = int(message.text)
