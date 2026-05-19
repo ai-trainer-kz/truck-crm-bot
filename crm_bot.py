@@ -55,14 +55,6 @@ CREATE TABLE IF NOT EXISTS products (
 """)
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS masters (
-    id SERIAL PRIMARY KEY,
-    name TEXT,
-    specialty TEXT
-)
-""")
-
-cursor.execute("""
 CREATE TABLE IF NOT EXISTS appointments (
     id SERIAL PRIMARY KEY,
     client_id INTEGER,
@@ -308,15 +300,7 @@ async def save_booking(message: Message):
             f"❌ Ошибка записи:\n{e}"
         )
         
-    for item in appointments:
-
-        product = item[0]
-        truck = item[1]
-        vin = item[2]
-        phone = item[3]
-    
-        text += (
-            f"📦 Товар: {product}\n"
+               f"📦 Товар: {product}\n"
             f"🚚 Грузовик: {truck}\n"
             f"🆔 VIN: {vin}\n"
             f"📞 Телефон: {phone}\n\n"
@@ -551,6 +535,53 @@ async def stats(message: Message):
     await message.answer(text)
 
 # ================= ДОБАВИТЬ ТОВАР =================
+
+@dp.message(F.text == "➕ Добавить товар")
+async def add_product(message: Message):
+
+    if message.from_user.id != ADMIN_ID:
+        return
+
+    await message.answer(
+        "Отправьте товар так:\n\n"
+        "Название,Цена,Категория,Количество\n\n"
+        "Пример:\n"
+        "Shell Rimula,32000,Масла,5"
+    )
+
+
+@dp.message(F.text.contains(","))
+async def save_product(message: Message):
+
+    if message.from_user.id != ADMIN_ID:
+        return
+
+    text = message.text.strip()
+
+    parts = [x.strip() for x in text.split(",")]
+
+    if len(parts) != 4:
+        return
+
+    title = parts[0]
+    price = int(parts[1])
+    category = parts[2]
+    quantity = int(parts[3])
+
+    cursor.execute(
+        """
+        INSERT INTO products
+        (title, price, category, quantity)
+        VALUES (%s, %s, %s, %s)
+        """,
+        (title, price, category, quantity)
+    )
+
+    conn.commit()
+
+    await message.answer(
+        "✅ Товар добавлен."
+    )
 
 # ================= УДАЛИТЬ ТОВАР =================
 
