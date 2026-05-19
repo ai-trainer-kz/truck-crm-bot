@@ -722,8 +722,7 @@ async def catalog(message: Message):
 
             text += (
                 f"📦 {product[0]}\n"
-                f"💰 {product[1]}₸\n"
-                f"📦 Остаток: {product[2]}\n\n"
+                f"💰 {product[1]}₸\n\n"
             )
 
         await message.answer(text)
