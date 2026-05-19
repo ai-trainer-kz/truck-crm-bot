@@ -529,87 +529,87 @@ async def stats(message: Message):
 
 # ================= ДОБАВИТЬ ТОВАР =================
 
-await message.answer(
-    "📦 Добавление товара\n\n"
-
-    "Напишите товар так:\n\n"
-
-    "масло название цена количество\n"
-    "фильтр название цена количество\n"
-    "запчасть название цена количество\n"
-    "акция название цена количество\n\n"
-
-    "Примеры:\n\n"
-
-    "масло Shell Rimula 15W40 32000 5\n\n"
-
-    "фильтр HOWO WG9725550966 12000 10\n\n"
-
-    "запчасть Подшипник SHACMAN 45000 2"
-)
-
-dp.message()
-async def save_product(message: Message):
-
-    if message.from_user.id != ADMIN_ID:
-        return
-
-    text = message.text.strip()
-
-    words = text.split()
-
-    if len(words) < 4:
-        return
-
-    product_type = words[0].lower()
-
-    quantity = words[-1]
-
-    price = words[-2]
-
-    title = " ".join(words[1:-2])
-
-    if not price.isdigit():
-        return
-
-    if not quantity.isdigit():
-        return
-
-    categories = {
-        "масло": "Масла",
-        "фильтр": "Фильтры",
-        "запчасть": "Запчасти",
-        "акция": "Акции"
-    }
-
-    if product_type not in categories:
-        return
-
-    category = categories[product_type]
-
-    cursor.execute(
-        """
-        INSERT INTO products
-        (title, price, category, quantity)
-        VALUES (%s, %s, %s, %s)
-        """,
-        (
-            title,
-            int(price),
-            category,
-            int(quantity)
-        )
-    )
-
-    conn.commit()
-
     await message.answer(
-        f"✅ Товар добавлен:\n\n"
-        f"📦 {title}\n"
-        f"💰 {price}₸\n"
-        f"📂 {category}\n"
-        f"📦 Остаток: {quantity}"
+        "📦 Добавление товара\n\n"
+    
+        "Напишите товар так:\n\n"
+    
+        "масло название цена количество\n"
+        "фильтр название цена количество\n"
+        "запчасть название цена количество\n"
+        "акция название цена количество\n\n"
+    
+        "Примеры:\n\n"
+    
+        "масло Shell Rimula 15W40 32000 5\n\n"
+    
+        "фильтр HOWO WG9725550966 12000 10\n\n"
+    
+        "запчасть Подшипник SHACMAN 45000 2"
     )
+    
+    dp.message()
+    async def save_product(message: Message):
+    
+        if message.from_user.id != ADMIN_ID:
+            return
+    
+        text = message.text.strip()
+    
+        words = text.split()
+    
+        if len(words) < 4:
+            return
+    
+        product_type = words[0].lower()
+    
+        quantity = words[-1]
+    
+        price = words[-2]
+    
+        title = " ".join(words[1:-2])
+    
+        if not price.isdigit():
+            return
+    
+        if not quantity.isdigit():
+            return
+    
+        categories = {
+            "масло": "Масла",
+            "фильтр": "Фильтры",
+            "запчасть": "Запчасти",
+            "акция": "Акции"
+        }
+    
+        if product_type not in categories:
+            return
+    
+        category = categories[product_type]
+    
+        cursor.execute(
+            """
+            INSERT INTO products
+            (title, price, category, quantity)
+            VALUES (%s, %s, %s, %s)
+            """,
+            (
+                title,
+                int(price),
+                category,
+                int(quantity)
+            )
+        )
+    
+        conn.commit()
+    
+        await message.answer(
+            f"✅ Товар добавлен:\n\n"
+            f"📦 {title}\n"
+            f"💰 {price}₸\n"
+            f"📂 {category}\n"
+            f"📦 Остаток: {quantity}"
+        )
 # ================= УДАЛИТЬ ТОВАР =================
 
 delete_mode = {}
