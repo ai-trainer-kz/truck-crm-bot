@@ -592,7 +592,7 @@ async def delete_product(message: Message):
         "Отправьте ID товара для удаления."
     )
 
-@dp.message()
+@dp.message(F.text.regexp(r"^\d+$"))
 async def delete_by_id(message: Message):
 
     if message.from_user.id != ADMIN_ID:
