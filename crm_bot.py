@@ -158,6 +158,8 @@ async def admin_panel(message: Message):
     if message.from_user.id != ADMIN_ID:
         return
 
+    add_mode[message.from_user.id] = True 
+
     cursor.execute("SELECT COUNT(*) FROM clients")
     users_count = cursor.fetchone()[0]
 
@@ -476,7 +478,7 @@ async def stock(message: Message):
 @dp.message(F.text == "👥 Клиенты")
 async def clients_list(message: Message):
 
-    if message.from_user.id != ADMIN_ID:
+    if not add_mode.get(message.from_user.id):
         return
 
     cursor.execute("""
@@ -528,6 +530,7 @@ async def stats(message: Message):
     await message.answer(text)
 
 # ================= ДОБАВИТЬ ТОВАР =================
+    add_mode = {}
 
     await message.answer(
         "📦 Добавление товара\n\n"
@@ -602,6 +605,8 @@ async def stats(message: Message):
         )
     
         conn.commit()
+
+        add_mode[message.from_user.id] = False
     
         await message.answer(
             f"✅ Товар добавлен:\n\n"
