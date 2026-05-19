@@ -478,10 +478,8 @@ async def stock(message: Message):
 @dp.message(F.text == "👥 Клиенты")
 async def clients_list(message: Message):
 
-    if not add_mode.get(message.from_user.id):
-        return
-
     cursor.execute("""
+    
     SELECT name, visits, total_paid
     FROM clients
     WHERE name != 'AI Учитель Поддержка'
@@ -530,15 +528,13 @@ async def stats(message: Message):
     await message.answer(text)
 
 # ================= ДОБАВИТЬ ТОВАР =================
-    add_mode = {}
+add_mode = {}
 
 @dp.message(F.text == "➕ Добавить товар")
 async def add_product(message: Message):
 
     if message.from_user.id != ADMIN_ID:
         return
-
-    add_mode[message.from_user.id] = True
 
     await message.answer(
         "📦 Добавление товара\n\n"
