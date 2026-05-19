@@ -556,7 +556,22 @@ async def add_product(message: Message):
     )
 
 
-@dp.message(F.text)
+@dp.message(
+    F.text &
+    ~F.text.startswith("/") &
+    ~F.text.startswith("🚚") &
+    ~F.text.startswith("🛢") &
+    ~F.text.startswith("🔧") &
+    ~F.text.startswith("⚙️") &
+    ~F.text.startswith("🔥") &
+    ~F.text.startswith("📦") &
+    ~F.text.startswith("📍") &
+    ~F.text.startswith("📞") &
+    ~F.text.startswith("👥") &
+    ~F.text.startswith("📊") &
+    ~F.text.startswith("🏬") &
+    ~F.text.startswith("❌")
+)
 async def save_product(message: Message):
 
     if message.from_user.id != ADMIN_ID:
