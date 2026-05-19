@@ -33,18 +33,26 @@ cursor = conn.cursor()
 
 # ================= PRODUCTS TABLE =================
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS products (
+try:
 
-    id SERIAL PRIMARY KEY,
-    title TEXT,
-    price INTEGER,
-    quantity INTEGER
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS products (
 
-)
-""")
+        id SERIAL PRIMARY KEY,
+        title TEXT,
+        price INTEGER,
+        quantity INTEGER
 
-conn.commit()
+    )
+    """)
+
+    conn.commit()
+
+    print("PRODUCTS TABLE OK")
+
+except Exception as e:
+
+    print("PRODUCTS TABLE ERROR:", e)
 
 # ================= TABLES =================
 
