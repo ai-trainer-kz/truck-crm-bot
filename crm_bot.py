@@ -667,15 +667,15 @@ async def text_handler(message: Message):
 
             title = parts[0]
             price = int(parts[1])
-            quantity = int(parts[2]))
+            quantity = int(parts[2])
         
             cursor.execute(
                 """
                 INSERT INTO products
-                (title, category, price)
+                (title, price, quantity)
                 VALUES (%s, %s, %s)
                 """,
-                (title, category, price)
+                (title, price, quantity)
             )
         
             await message.answer(
