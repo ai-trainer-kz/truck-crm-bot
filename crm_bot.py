@@ -299,13 +299,6 @@ async def save_booking(message: Message):
         await message.answer(
             f"❌ Ошибка записи:\n{e}"
         )
-        
-               f"📦 Товар: {product}\n"
-            f"🚚 Грузовик: {truck}\n"
-            f"🆔 VIN: {vin}\n"
-            f"📞 Телефон: {phone}\n\n"
-        )
-    await message.answer(text)
 
 @dp.message(F.text == "❌ Отменить запись")
 async def cancel_booking(message: Message):
