@@ -669,9 +669,8 @@ async def text_handler(message: Message):
 
         conn.commit()
 
-        await message.answer(
-            "✅ Товар добавлен."
-        )
+        await message.answer("✅ Товар добавлен.")
+        return
 
 # ================= УДАЛИТЬ ТОВАР =================
 
