@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
     title TEXT,
     price INTEGER,
+    category TEXT,
     quantity INTEGER
 )
 """)
@@ -307,78 +308,6 @@ async def save_booking(message: Message):
             f"❌ Ошибка записи:\n{e}"
         )
         
-@dp.message(F.text == "💅 Услуги")
-async def services(message: Message):
-
-    cursor.execute("SELECT title, price FROM services")
-
-    services_list = cursor.fetchall()
-
-    if not services_list:
-        await message.answer("Услуги пока не добавлены.")
-        return
-
-    text = "💅 Наши услуги:\n\n"
-
-    for service in services_list:
-        text += f"• {service[0]} — {service[1]}₸\n"
-
-    await message.answer(text)
-
-@dp.message(F.text == "👩‍🔬 Мастера")
-async def masters(message: Message):
-
-    cursor.execute("SELECT name, specialty FROM masters")
-
-    masters_list = cursor.fetchall()
-
-    if not masters_list:
-        await message.answer("Мастера пока не добавлены.")
-        return
-
-    text = "👩‍🔬 Наши мастера:\n\n"
-
-    for master in masters_list:
-        text += f"• {master[0]} — {master[1]}\n"
-
-    await message.answer(text)
-
-@dp.message(F.text == "🕒 Мои записи")
-async def my_appointments(message: Message):
-
-    user_id = message.from_user.id
-
-    cursor.execute(
-        "SELECT id FROM clients WHERE tg_id = %s",
-        (user_id,)
-    )
-
-    client = cursor.fetchone()
-
-    if not client:
-        await message.answer("Вы не зарегистрированы.")
-        return
-
-    client_id = client[0]
-
-    cursor.execute(
-        """
-        SELECT product, truck, vin, phone
-        FROM appointments
-        WHERE client_id = %s
-        ORDER BY id DESC
-        """,
-        (client_id,)
-    )
-
-    appointments = cursor.fetchall()
-
-    if not appointments:
-        await message.answer("У вас пока нет записей.")
-        return
-
-    text = "🕒 Ваши записи:\n\n"
-
     for item in appointments:
 
         product = item[0]
@@ -483,24 +412,6 @@ async def cancel_booking(message: Message):
             f"❌ Ошибка:\n{e}"
         )
         
-@dp.message(F.text == "💰 Прайс")
-async def price(message: Message):
-
-    cursor.execute("SELECT title, price FROM services")
-
-    services_list = cursor.fetchall()
-
-    if not services_list:
-        await message.answer("Прайс пока пуст.")
-        return
-
-    text = "💰 Прайс:\n\n"
-
-    for service in services_list:
-        text += f"{service[0]} — {service[1]}₸\n"
-
-    await message.answer(text)
-
 @dp.message(F.text == "📍 Адрес")
 async def address(message: Message):
 
@@ -640,37 +551,6 @@ async def stats(message: Message):
     await message.answer(text)
 
 # ================= ДОБАВИТЬ ТОВАР =================
-
-@dp.message(F.text.contains(","))
-async def text_handler(message: Message):
-
-    if message.from_user.id != ADMIN_ID:
-        return
-
-    text = message.text
-
-    parts = text.split(",")
-
-    # Товар
-    if len(parts) == 3:
-
-        title = parts[0]
-        price = int(parts[1])
-        quantity = int(parts[2])
-
-        cursor.execute(
-            """
-            INSERT INTO products
-            (title, price, quantity)
-            VALUES (%s, %s, %s)
-            """,
-            (title, price, quantity)
-        )
-
-        conn.commit()
-
-        await message.answer("✅ Товар добавлен.")
-        return
 
 # ================= УДАЛИТЬ ТОВАР =================
 
