@@ -560,13 +560,16 @@ async def add_product(message: Message):
     )
 
 
-@dp.message()
+@dp.message(F.text)
 async def save_product(message: Message):
 
     if message.from_user.id != ADMIN_ID:
         return
 
     if not add_mode.get(message.from_user.id):
+        return
+
+    if message.text.startswith("/"):
         return
 
     text = message.text.strip()
