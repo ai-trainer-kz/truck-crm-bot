@@ -199,11 +199,11 @@ async def admin_panel(message: Message):
         reply_markup=admin_kb
     )
 
-@dp.message(F.text == "🛍 Каталог")
+@dp.message(F.text == "🚚 Каталог")
 async def catalog(message: Message):
 
     await message.answer(
-        "🛍 Выберите категорию:",
+        "🚚 Выберите категорию:",
         reply_markup=catalog_kb
     )
 
