@@ -34,9 +34,6 @@ cursor = conn.cursor()
 # ================= TABLES =================
 
 cursor.execute("""
-TRUNCATE TABLE products RESTART IDENTITY;
-""")
-
 CREATE TABLE IF NOT EXISTS clients (
     id SERIAL PRIMARY KEY,
     tg_id BIGINT UNIQUE,
@@ -56,6 +53,10 @@ CREATE TABLE IF NOT EXISTS products (
     category TEXT,
     quantity INTEGER
 )
+""")
+
+cursor.execute("""
+TRUNCATE TABLE products RESTART IDENTITY;
 """)
 
 cursor.execute("""
