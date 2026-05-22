@@ -590,6 +590,7 @@ async def add_product(message: Message):
 async def save_product(message: Message):
 
     print("SAVE_PRODUCT:", message.text)
+    print("ADD_MODE =", add_mode)
 
     if message.from_user.id != ADMIN_ID:
         return
