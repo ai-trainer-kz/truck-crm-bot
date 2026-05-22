@@ -692,8 +692,6 @@ async def delete_by_id(message: Message):
         print("DELETE MODE FALSE")
         return
 
-    print("DELETE MODE TRUE")
-    
         await message.answer(
             "❌ Режим удаления отменён."
         )
