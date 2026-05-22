@@ -670,8 +670,6 @@ delete_mode = {}
 
 @dp.message(F.text == "❌ Удалить товар")
 async def delete_product(message: Message):
-    
-     print("DELETE_HANDLER:", message.text)
 
     if message.from_user.id != ADMIN_ID:
         return
