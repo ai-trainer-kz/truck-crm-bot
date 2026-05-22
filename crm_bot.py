@@ -95,21 +95,13 @@ client_kb = ReplyKeyboardMarkup(
         ]
     ],
     resize_keyboard=True
-)
-
+    
 catalog_kb = ReplyKeyboardMarkup(
     keyboard=[
-        [
-            KeyboardButton(text="🛢 Масла"),
-            KeyboardButton(text="🔧 Фильтры")
-        ],
-        [
-            KeyboardButton(text="⚙️ Запчасти"),
-            KeyboardButton(text="🔥 Акции")
-        ],
-        [
-            KeyboardButton(text="⬅️ Назад")
-        ]
+        [KeyboardButton(text="🛢 Масла")],
+        [KeyboardButton(text="🔍 Фильтра")],
+        [KeyboardButton(text="⚙ Запчасти")],
+        [KeyboardButton(text="🔙 Назад")]
     ],
     resize_keyboard=True
 )
@@ -169,6 +161,14 @@ async def start_cmd(message: Message):
     await message.answer(
         text,
         reply_markup=client_kb
+    )
+
+@dp.message(F.text == "🚚 Каталог")
+async def catalog(message: Message):
+
+    await message.answer(
+        "🚚 Выберите категорию:",
+        reply_markup=catalog_kb
     )
 
 # ================= ADMIN =================
@@ -641,13 +641,7 @@ async def save_product(message: Message):
     except Exception as e:
         await message.answer(
             f"❌ Ошибка:\n{e}"
-        )
-
-@dp.message(F.text.contains("Каталог"))
-async def test_catalog(message: Message):
-
-    await message.answer("ТЕСТ КАТАЛОГА")
-          
+        )          
 
 # ================= УДАЛИТЬ ТОВАР =================
 
@@ -702,7 +696,7 @@ async def delete_by_id(message: Message):
         "✅ Товар удалён."
     )
 
-@dp.message(F.text == "⬅️ Назад")
+@dp.message(F.text == "🔙 Назад")
 async def back_to_menu(message: Message):
 
     await message.answer(
