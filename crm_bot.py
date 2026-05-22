@@ -705,6 +705,8 @@ async def delete_by_id(message: Message):
 @dp.message(F.text == "🚚 Каталог")
 async def open_catalog(message: Message):
 
+    print("CATALOG CLICKED")
+
     await message.answer(
         "📦 Выберите категорию:",
         reply_markup=catalog_kb
