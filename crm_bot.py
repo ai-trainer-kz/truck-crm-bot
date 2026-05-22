@@ -695,7 +695,7 @@ async def delete_by_id(message: Message):
         "✅ Товар удалён."
     )
 
-@dp.message(F.text == "🚚 Каталог")
+@dp.message(F.text.contains("Каталог"))
 async def open_catalog(message: Message):
 
     print("CATALOG CLICK")
