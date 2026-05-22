@@ -721,6 +721,8 @@ async def save_product(message: Message):
 @dp.message(F.text == "🛢 Масла")
 async def oils(message: Message):
 
+    print("OILS CLICKED")
+
     cursor.execute(
         """
         SELECT title, price, quantity
@@ -733,8 +735,6 @@ async def oils(message: Message):
     )
 
     products = cursor.fetchall()
-
-    print("PRODUCTS =", products)
 
     if not products:
         await message.answer(
@@ -752,6 +752,8 @@ async def oils(message: Message):
         
 @dp.message(F.text == "🔍 Фильтра")
 async def filters(message: Message):
+
+    print("FILTERS CLICKED")
 
     cursor.execute(
         """
@@ -784,6 +786,8 @@ async def filters(message: Message):
 
 @dp.message(F.text == "⚙ Запчасти")
 async def parts(message: Message):
+
+    print("PARTS CLICKED")
 
     cursor.execute(
         """
