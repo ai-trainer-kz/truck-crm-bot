@@ -707,10 +707,7 @@ async def open_catalog(message: Message):
 
     print("CATALOG CLICKED")
 
-    await message.answer(
-        "📦 Выберите категорию:",
-        reply_markup=catalog_kb
-    )
+    await message.answer("ТЕСТ КАТАЛОГА")
 
 @dp.message(F.text == "⬅️ Назад")
 async def back_to_menu(message: Message):
