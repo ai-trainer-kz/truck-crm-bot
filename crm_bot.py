@@ -642,6 +642,11 @@ async def save_product(message: Message):
         await message.answer(
             f"❌ Ошибка:\n{e}"
         )
+
+@dp.message(F.text.contains("Каталог"))
+async def test_catalog(message: Message):
+
+    await message.answer("ТЕСТ КАТАЛОГА")
           
 
 # ================= УДАЛИТЬ ТОВАР =================
@@ -696,13 +701,6 @@ async def delete_by_id(message: Message):
     await message.answer(
         "✅ Товар удалён."
     )
-
-@dp.message(F.text.contains("Каталог"))
-async def open_catalog(message: Message):
-
-    print("CATALOG CLICK")
-
-    await message.answer("Каталог открыт")
 
 @dp.message(F.text == "⬅️ Назад")
 async def back_to_menu(message: Message):
