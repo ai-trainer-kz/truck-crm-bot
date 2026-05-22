@@ -576,7 +576,7 @@ async def save_product(message: Message):
 
     if not add_mode.get(message.from_user.id):
         return
-    
+
     try:
         text = message.text.strip()
 
@@ -700,9 +700,7 @@ async def open_catalog(message: Message):
 
     print("CATALOG CLICK")
 
-    await message.answer(
-        "Каталог открыт"
-    )
+    await message.answer("Каталог открыт")
 
 @dp.message(F.text == "⬅️ Назад")
 async def back_to_menu(message: Message):
