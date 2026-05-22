@@ -571,14 +571,18 @@ async def add_product(message: Message):
 )
 async def save_product(message: Message):
 
-    print("SAVE_PRODUCT:", message.text)
-
     if message.from_user.id != ADMIN_ID:
         return
 
     if not add_mode.get(message.from_user.id):
         return
 
+         print(
+            "SAVE_PRODUCT:",
+            message.from_user.id,
+            message.text
+        ) 
+        
     try:
         text = message.text.strip()
 
@@ -700,9 +704,10 @@ async def delete_by_id(message: Message):
 @dp.message(F.text == "🚚 Каталог")
 async def open_catalog(message: Message):
 
+    print("CATALOG CLICK")
+
     await message.answer(
-        "📦 Выберите категорию:",
-        reply_markup=catalog_kb
+        "Каталог открыт"
     )
 
 @dp.message(F.text == "⬅️ Назад")
