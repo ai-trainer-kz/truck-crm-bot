@@ -646,8 +646,6 @@ async def save_product(message: Message):
 
         conn.commit()
 
-        add_mode[message.from_user.id] = False
-
         await message.answer(
             f"✅ Товар добавлен:\n\n"
             f"📦 {name}\n"
@@ -707,8 +705,6 @@ async def delete_by_id(message: Message):
     )
 
     conn.commit()
-
-    delete_mode[message.from_user.id] = False
 
     await message.answer(
         "✅ Товар удалён."
