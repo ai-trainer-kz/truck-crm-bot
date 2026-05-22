@@ -31,18 +31,6 @@ conn.autocommit = True
 
 cursor = conn.cursor()
 
-# ================= PRODUCTS TABLE =================
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS products (
-
-    id SERIAL PRIMARY KEY,
-    title TEXT,
-    price INTEGER,
-    quantity INTEGER
-
-)
-""")
 # ================= TABLES =================
 
 cursor.execute("""
@@ -584,37 +572,31 @@ async def save_product(message: Message):
         if len(parts) < 4:
             return
 
-        category = parts[0]
+        category = parts[0].lower()
+
+        categories = {
+            "масло": "Масла",
+            "фильтр": "Фильтры",
+            "запчасть": "Запчасти",
+            "акция": "Акции"
+        }
+        
+        category = categories.get(category)
+        
+        if not category:
+            await message.answer(
+                "❌ Используйте:\n"
+                "масло\n"
+                "фильтр\n"
+                "запчасть\n"
+                "акция"
+            )
+            return
+        
         quantity = int(parts[-1])
         price = int(parts[-2])
         name = " ".join(parts[1:-2])
 
-        conn = sqlite3.connect("crm.db")
-        cursor = conn.cursor()
-
-        cursor.execute(
-            """
-            INSERT INTO products
-            (name, price, category, quantity)
-            VALUES (?, ?, ?, ?)
-            """,
-            (name, price, category, quantity)
-        )
-
-        conn.commit()
-        conn.close()
-
-        await message.answer(
-            f"✅ Товар добавлен:\n\n"
-            f"📦 {name}\n"
-            f"💰 {price}₸\n"
-            f"📂 {category}\n"
-            f"📦 Остаток: {quantity}"
-        )
-
-    except Exception as e:
-        await message.answer(f"❌ Ошибка:\n{e}")
-        
 # ================= УДАЛИТЬ ТОВАР =================
 
 delete_mode = {}
