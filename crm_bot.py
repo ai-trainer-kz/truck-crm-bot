@@ -734,6 +734,8 @@ async def oils(message: Message):
 
     products = cursor.fetchall()
 
+    print("PRODUCTS =", products)
+
     if not products:
         await message.answer(
             "🛢 Масла пока отсутствуют."
