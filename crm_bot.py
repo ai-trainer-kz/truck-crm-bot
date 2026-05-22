@@ -701,6 +701,8 @@ async def save_product(message: Message):
 
         conn.commit()
 
+        add_mode.pop(message.from_user.id, None)
+
         print("INSERT OK")
 
         await message.answer(
