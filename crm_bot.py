@@ -571,6 +571,8 @@ async def add_product(message: Message):
 )
 async def save_product(message: Message):
 
+    print("SAVE_PRODUCT:", message.text)
+
     if message.from_user.id != ADMIN_ID:
         return
 
