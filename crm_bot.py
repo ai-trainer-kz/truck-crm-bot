@@ -88,6 +88,20 @@ client_kb = ReplyKeyboardMarkup(
             KeyboardButton(text="🚚 Каталог")
         ],
         [
+            KeyboardButton(text="📦 Оставить заявку"),
+            KeyboardButton(text="🛒 Корзина")
+        ],
+        [
+            KeyboardButton(text="📍 Адрес"),
+            KeyboardButton(text="📞 Контакты")
+        ]
+    ],
+    resize_keyboard=True
+)
+
+catalog_kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [
             KeyboardButton(text="🛢 Масла"),
             KeyboardButton(text="🔧 Фильтры")
         ],
@@ -96,12 +110,7 @@ client_kb = ReplyKeyboardMarkup(
             KeyboardButton(text="🔥 Акции")
         ],
         [
-            KeyboardButton(text="📦 Оставить заявку"),
-            KeyboardButton(text="🛒 Корзина")
-        ],
-        [
-            KeyboardButton(text="📍 Адрес"),
-            KeyboardButton(text="📞 Контакты")
+            KeyboardButton(text="⬅️ Назад")
         ]
     ],
     resize_keyboard=True
@@ -694,39 +703,20 @@ async def delete_by_id(message: Message):
     )
 
 @dp.message(F.text == "🚚 Каталог")
-async def catalog(message: Message):
+async def open_catalog(message: Message):
 
-    try:
+    await message.answer(
+        "📦 Выберите категорию:",
+        reply_markup=catalog_kb
+    )
 
-        cursor.execute("""
-            SELECT title, price, quantity
-            FROM products
-            WHERE quantity > 0
-            ORDER BY id DESC
-        """)
+@dp.message(F.text == "⬅️ Назад")
+async def back_to_menu(message: Message):
 
-        products = cursor.fetchall()
-
-        if not products:
-            await message.answer("🚚 Каталог пуст.")
-            return
-
-        text = "🚚 Каталог:\n\n"
-
-        for product in products:
-
-            text += (
-                f"📦 {product[0]}\n"
-                f"💰 {product[1]}₸\n\n"
-            )
-
-        await message.answer(text)
-
-    except Exception as e:
-
-        print("CATALOG ERROR:", e)
-
-        await message.answer(f"❌ Ошибка каталога:\n{e}")
+    await message.answer(
+        "Главное меню",
+        reply_markup=client_kb
+    )
     
 @dp.message(F.text == "🛢 Масла")
 async def oils(message: Message):
