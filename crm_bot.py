@@ -685,15 +685,16 @@ async def delete_product(message: Message):
 @dp.message(F.text.regexp(r"^\d+$"))
 async def delete_by_id(message: Message):
 
+    print("DELETE_HANDLER:", message.text)
+
     if message.from_user.id != ADMIN_ID:
         return
 
     if not delete_mode.get(message.from_user.id):
+        print("DELETE MODE FALSE")
         return
 
-    if not message.text.isdigit():
-
-        delete_mode[message.from_user.id] = False
+    print("DELETE MODE TRUE")
     
         await message.answer(
             "❌ Режим удаления отменён."
