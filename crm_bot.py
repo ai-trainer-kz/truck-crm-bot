@@ -34,6 +34,8 @@ cursor = conn.cursor()
 # ================= TABLES =================
 
 cursor.execute("""
+TRUNCATE TABLE products RESTART IDENTITY;
+""")
 
 CREATE TABLE IF NOT EXISTS clients (
     id SERIAL PRIMARY KEY,
