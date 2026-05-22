@@ -646,6 +646,8 @@ async def save_product(message: Message):
 
         conn.commit()
 
+        print("INSERT OK")
+
         await message.answer(
             f"✅ Товар добавлен:\n\n"
             f"📦 {name}\n"
