@@ -583,6 +583,58 @@ async def add_product(message: Message):
         "акция название цена количество"
     )
 
+# ================= УДАЛИТЬ ТОВАР =================
+
+delete_mode = {}
+
+@dp.message(F.text == "❌ Удалить товар")
+async def delete_product(message: Message):
+
+    if message.from_user.id != ADMIN_ID:
+        return
+
+    delete_mode[message.from_user.id] = True
+
+    await message.answer(
+        "Отправьте ID товара для удаления."
+    )
+
+@dp.message(F.text.regexp(r"^\d+$"))
+async def delete_by_id(message: Message):
+
+    print("DELETE_HANDLER:", message.text)
+
+    if message.from_user.id != ADMIN_ID:
+        return
+
+    if not delete_mode.get(message.from_user.id):
+        print("DELETE MODE FALSE")
+    
+        await message.answer(
+            "❌ Сначала нажмите кнопку 'Удалить товар'"
+        )
+        return
+
+    product_id = int(message.text)
+
+    cursor.execute(
+        """
+        DELETE FROM products
+        WHERE id = %s
+        """,
+        (product_id,)
+    )
+
+    print("ROWCOUNT =", cursor.rowcount)
+
+    conn.commit()
+
+    delete_mode.pop(message.from_user.id, None)
+
+    await message.answer(
+        "✅ Товар удалён."
+    )
+
 @dp.message(
     F.text &
     ~F.text.startswith("/")
@@ -663,59 +715,7 @@ async def save_product(message: Message):
         await message.answer(
             f"❌ Ошибка:\n{e}"
         )          
-
-# ================= УДАЛИТЬ ТОВАР =================
-
-delete_mode = {}
-
-@dp.message(F.text == "❌ Удалить товар")
-async def delete_product(message: Message):
-
-    if message.from_user.id != ADMIN_ID:
-        return
-
-    delete_mode[message.from_user.id] = True
-
-    await message.answer(
-        "Отправьте ID товара для удаления."
-    )
-
-@dp.message(F.text.regexp(r"^\d+$"))
-async def delete_by_id(message: Message):
-
-    print("DELETE_HANDLER:", message.text)
-
-    if message.from_user.id != ADMIN_ID:
-        return
-
-    if not delete_mode.get(message.from_user.id):
-        print("DELETE MODE FALSE")
-        return
-
-        await message.answer(
-            "❌ Режим удаления отменён."
-        )
-    
-        return
-
-    product_id = int(message.text)
-
-    cursor.execute(
-        """
-        DELETE FROM products
-        WHERE id = %s
-        """,
-        (product_id,)
-    )
-
-    print("ROWCOUNT =", cursor.rowcount)
-
-    conn.commit()
-
-    await message.answer(
-        "✅ Товар удалён."
-    )
-    
+        
 @dp.message(F.text == "🛢 Масла")
 async def oils(message: Message):
 
@@ -746,7 +746,7 @@ async def oils(message: Message):
             f"📦 Остаток: {product[2]}"
         )
         
-@dp.message(F.text == "🔧 Фильтры")
+@dp.message(F.text == "🔍 Фильтра")
 async def filters(message: Message):
 
     cursor.execute(
@@ -763,7 +763,7 @@ async def filters(message: Message):
     products = cursor.fetchall()
 
     if not products:
-        await message.answer("🔧 Фильтры пока отсутствуют.")
+        await message.answer("🔍 Фильтры пока отсутствуют.")
         return
 
     text = "🔧 Фильтры:\n\n"
@@ -778,7 +778,7 @@ async def filters(message: Message):
     await message.answer(text)
 
 
-@dp.message(F.text == "⚙️ Запчасти")
+@dp.message(F.text == "⚙ Запчасти")
 async def parts(message: Message):
 
     cursor.execute(
@@ -795,7 +795,7 @@ async def parts(message: Message):
     products = cursor.fetchall()
 
     if not products:
-        await message.answer("⚙️ Запчасти пока отсутствуют.")
+        await message.answer("⚙ Запчасти пока отсутствуют.")
         return
 
     text = "⚙️ Запчасти:\n\n"
