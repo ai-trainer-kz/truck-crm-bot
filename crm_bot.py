@@ -770,7 +770,7 @@ async def filters(message: Message):
         await message.answer("🔍 Фильтры пока отсутствуют.")
         return
 
-    text = "🔧 Фильтры:\n\n"
+    text = "🔍 Фильтры:\n\n"
 
     for product in products:
 
@@ -802,7 +802,7 @@ async def parts(message: Message):
         await message.answer("⚙ Запчасти пока отсутствуют.")
         return
 
-    text = "⚙️ Запчасти:\n\n"
+    text = "⚙ Запчасти:\n\n"
 
     for product in products:
 
