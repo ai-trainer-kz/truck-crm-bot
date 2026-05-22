@@ -34,6 +34,7 @@ cursor = conn.cursor()
 # ================= TABLES =================
 
 cursor.execute("""
+
 CREATE TABLE IF NOT EXISTS clients (
     id SERIAL PRIMARY KEY,
     tg_id BIGINT UNIQUE,
@@ -44,6 +45,8 @@ CREATE TABLE IF NOT EXISTS clients (
     created_at TIMESTAMP DEFAULT NOW()
 )
 """)
+
+cursor.execute("DROP TABLE IF EXISTS products")
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS products (
