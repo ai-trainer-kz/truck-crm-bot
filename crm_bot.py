@@ -575,14 +575,8 @@ async def save_product(message: Message):
         return
 
     if not add_mode.get(message.from_user.id):
-        return
-
-         print(
-            "SAVE_PRODUCT:",
-            message.from_user.id,
-            message.text
-        ) 
-        
+    return
+    
     try:
         text = message.text.strip()
 
