@@ -598,33 +598,33 @@ async def save_product(message: Message):
         name = " ".join(parts[1:-2])
         
         cursor.execute(
-                """
-                INSERT INTO products
-                (title, price, category, quantity)
-                VALUES (%s, %s, %s, %s)
-                """,
-                (
-                    name,
-                    price,
-                    category,
-                    quantity
-                )
+            """
+            INSERT INTO products
+            (title, price, category, quantity)
+            VALUES (%s, %s, %s, %s)
+            """,
+            (
+                name,
+                price,
+                category,
+                quantity
             )
-    
-            conn.commit()
-    
-            await message.answer(
-                f"✅ Товар добавлен:\n\n"
-                f"📦 {name}\n"
-                f"💰 {price}₸\n"
-                f"📂 {category}\n"
-                f"📦 Остаток: {quantity}"
-            )
-    
-        except Exception as e:
-            await message.answer(
-                f"❌ Ошибка:\n{e}"
-            )
+        )
+
+        conn.commit()
+
+        await message.answer(
+            f"✅ Товар добавлен:\n\n"
+            f"📦 {name}\n"
+            f"💰 {price}₸\n"
+            f"📂 {category}\n"
+            f"📦 Остаток: {quantity}"
+        )
+
+    except Exception as e:
+        await message.answer(
+            f"❌ Ошибка:\n{e}"
+        )
           
 
 # ================= УДАЛИТЬ ТОВАР =================
