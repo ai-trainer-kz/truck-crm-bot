@@ -207,6 +207,14 @@ async def catalog(message: Message):
         reply_markup=catalog_kb
     )
 
+@dp.message(F.text == "🔙 Назад")
+async def back_to_menu(message: Message):
+
+    await message.answer(
+        "Главное меню",
+        reply_markup=client_kb
+    )
+
 # ================= CLIENT MENU =================
 @dp.message(F.text == "📦 Оставить заявку")
 async def booking(message: Message):
@@ -705,14 +713,6 @@ async def delete_by_id(message: Message):
 
     await message.answer(
         "✅ Товар удалён."
-    )
-
-@dp.message(F.text == "🔙 Назад")
-async def back_to_menu(message: Message):
-
-    await message.answer(
-        "Главное меню",
-        reply_markup=client_kb
     )
     
 @dp.message(F.text == "🛢 Масла")
