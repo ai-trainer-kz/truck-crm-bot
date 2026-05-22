@@ -71,6 +71,15 @@ CREATE TABLE IF NOT EXISTS appointments (
 )
 """)
 
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS cart (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT,
+    product_id INTEGER,
+    quantity INTEGER DEFAULT 1
+)
+""")
+
 # ================= KEYBOARDS =================
 
 client_kb = ReplyKeyboardMarkup(
@@ -87,7 +96,8 @@ client_kb = ReplyKeyboardMarkup(
             KeyboardButton(text="🔥 Акции")
         ],
         [
-            KeyboardButton(text="📦 Оставить заявку")
+            KeyboardButton(text="📦 Оставить заявку"),
+            KeyboardButton(text="🛒 Корзина")
         ],
         [
             KeyboardButton(text="📍 Адрес"),
@@ -723,7 +733,7 @@ async def oils(message: Message):
 
     cursor.execute(
         """
-        SELECT title, price
+        SELECT title, price, quantity
         FROM products
         WHERE category = %s
         AND quantity > 0
@@ -735,20 +745,19 @@ async def oils(message: Message):
     products = cursor.fetchall()
 
     if not products:
-        await message.answer("🛢 Масла пока отсутствуют.")
+        await message.answer(
+            "🛢 Масла пока отсутствуют."
+        )
         return
-
-    text = "🛢 Масла в наличии:\n\n"
 
     for product in products:
 
-        text += (
-            f"📦 {product[0]}\n"
-            f"💰 {product[1]}₸\n\n"
+        await message.answer(
+            f"🛢 {product[0]}\n\n"
+            f"💰 Цена: {product[1]}₸\n"
+            f"📦 Остаток: {product[2]}"
         )
-
-    await message.answer(text)
-
+        
 @dp.message(F.text == "🔧 Фильтры")
 async def filters(message: Message):
 
