@@ -46,8 +46,6 @@ CREATE TABLE IF NOT EXISTS clients (
 )
 """)
 
-cursor.execute("DROP TABLE IF EXISTS products")
-
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
@@ -557,25 +555,15 @@ async def add_product(message: Message):
     if message.from_user.id != ADMIN_ID:
         return
 
+    add_mode[message.from_user.id] = True
+
     await message.answer(
         "📦 Добавление товара\n\n"
-
-        "Напишите товар так:\n\n"
-
         "масло название цена количество\n"
         "фильтр название цена количество\n"
         "запчасть название цена количество\n"
-        "акция название цена количество\n\n"
-
-        "Примеры:\n\n"
-
-        "масло Shell Rimula 15W40 32000 5\n\n"
-
-        "фильтр HOWO WG9725550966 12000 10\n\n"
-
-        "запчасть Подшипник SHACMAN 45000 2"
+        "акция название цена количество"
     )
-
 
 @dp.message(
     F.text &
@@ -584,6 +572,9 @@ async def add_product(message: Message):
 async def save_product(message: Message):
 
     if message.from_user.id != ADMIN_ID:
+        return
+
+    if not add_mode.get(message.from_user.id):
         return
 
     try:
@@ -634,6 +625,8 @@ async def save_product(message: Message):
         )
 
         conn.commit()
+
+        add_mode[message.from_user.id] = False
 
         await message.answer(
             f"✅ Товар добавлен:\n\n"
