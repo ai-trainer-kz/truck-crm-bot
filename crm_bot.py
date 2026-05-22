@@ -598,6 +598,8 @@ async def save_product(message: Message):
     if not add_mode.get(message.from_user.id):
         return
 
+    print("PASSED MODE CHECK")
+
     try:
         text = message.text.strip()
 
