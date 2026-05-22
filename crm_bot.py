@@ -60,6 +60,10 @@ TRUNCATE TABLE products RESTART IDENTITY;
 """)
 
 cursor.execute("""
+TRUNCATE TABLE appointments RESTART IDENTITY;
+""")
+
+cursor.execute("""
 CREATE TABLE IF NOT EXISTS appointments (
     id SERIAL PRIMARY KEY,
     client_id INTEGER,
