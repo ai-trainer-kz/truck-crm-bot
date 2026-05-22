@@ -96,15 +96,26 @@ client_kb = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
     
+)
+
 catalog_kb = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="🛢 Масла")],
-        [KeyboardButton(text="🔍 Фильтра")],
-        [KeyboardButton(text="⚙ Запчасти")],
-        [KeyboardButton(text="🔙 Назад")]
+        [
+            KeyboardButton(text="🛢 Масла")
+        ],
+        [
+            KeyboardButton(text="🔍 Фильтра")
+        ],
+        [
+            KeyboardButton(text="⚙ Запчасти")
+        ],
+        [
+            KeyboardButton(text="🔙 Назад")
+        ]
     ],
     resize_keyboard=True
 )
+
 
 admin_kb = ReplyKeyboardMarkup(
     keyboard=[
@@ -163,14 +174,6 @@ async def start_cmd(message: Message):
         reply_markup=client_kb
     )
 
-@dp.message(F.text == "🚚 Каталог")
-async def catalog(message: Message):
-
-    await message.answer(
-        "🚚 Выберите категорию:",
-        reply_markup=catalog_kb
-    )
-
 # ================= ADMIN =================
 
 @dp.message(Command("admin"))
@@ -194,6 +197,14 @@ async def admin_panel(message: Message):
     await message.answer(
         text,
         reply_markup=admin_kb
+    )
+
+@dp.message(F.text == "🛍 Каталог")
+async def catalog(message: Message):
+
+    await message.answer(
+        "🛍 Выберите категорию:",
+        reply_markup=catalog_kb
     )
 
 # ================= CLIENT MENU =================
